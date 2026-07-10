@@ -25,8 +25,10 @@ export default function Controls() {
   const { send } = useChat();
   const [text, setText] = useState('');
 
-  const toggleMic = () =>
+  const toggleMic = () => {
+    if (!localParticipant) return;
     localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
+  }
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();

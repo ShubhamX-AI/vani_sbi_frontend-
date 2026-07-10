@@ -199,3 +199,136 @@
 @media (prefers-reduced-motion: reduce) {
   .vw-orb, .vw-dot { animation: none; }
 }
+
+/* ── Room fills card, scrollable body ── */
+.vw-room {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.vw-body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── OpenUI rendered cards ── */
+.vw-openui-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+.vw-openui-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.vw-openui-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--blue-soft);
+  user-select: none;
+}
+
+.vw-openui-toggle,
+.vw-openui-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+.vw-openui-toggle:hover,
+.vw-openui-close:hover { background: rgba(0,0,0,0.06); color: var(--ink); }
+
+.vw-openui-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+.vw-openui-body {
+  padding: 12px;
+  font-size: 14px;
+}
+
+/* Constrain OpenUI components inside the widget */
+.vw-openui-body [class*="card"],
+.vw-openui-body [class*="Card"] {
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* ── Error boundary fallback ── */
+.vw-error-ui {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.vw-error-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fdeaea;
+  color: var(--danger);
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vw-error-heading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.vw-error-detail {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 280px;
+  word-break: break-word;
+}
+
+.vw-error-retry {
+  margin-top: 8px;
+  font-size: 14px;
+  padding: 10px 24px;
+  color: #fff;
+  background: var(--blue);
+}
+.vw-error-retry:hover { background: #22409a; }
+
+/* ── Visualizer placeholder when no track yet ── */
+.vw-bars-placeholder {
+  height: 96px;
+  width: 100%;
+  max-width: 180px;
+}

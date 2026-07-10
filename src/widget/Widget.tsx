@@ -6,8 +6,10 @@ import {
 } from '@livekit/components-react';
 import '@livekit/components-styles';
 import { fetchToken, type TokenResult } from './useToken';
+import ErrorBoundary from './ErrorBoundary';
 import Visualizer from './Visualizer';
 import Controls from './Controls';
+import AgentUI from './AgentUI';
 import './widget.css';
 
 type Status = 'idle' | 'connecting' | 'connected' | 'error';
@@ -23,9 +25,13 @@ export default function Widget() {
     setStatus('connecting');
     setError('');
     try {
-      setCreds(await fetchToken());
+      const token = await fetchToken();
+      console.log('[Widget] Token fetched:', { url: token.url, room: token.room });
+      setCreds(token);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to connect');
+      const msg = e instanceof Error ? e.message : 'Failed to connect';
+      console.error('[Widget] Token fetch failed:', msg);
+      setError(msg);
       setStatus('error');
     }
   };
@@ -43,24 +49,39 @@ export default function Widget() {
       </header>
 
       {creds ? (
-        <LiveKitRoom
-          serverUrl={creds.url}
-          token={creds.token}
-          connect
-          audio
-          video={false}
-          onConnected={() => setStatus('connected')}
-          onDisconnected={reset}
-          onError={(e) => {
-            setError(e.message);
-            setStatus('error');
-          }}
-        >
-          <RoomAudioRenderer />
-          <StartAudio label="Click to enable audio" />
-          <Visualizer />
-          <Controls />
-        </LiveKitRoom>
+        <ErrorBoundary onReset={reset}>
+          <LiveKitRoom
+            serverUrl={creds.url}
+            token={creds.token}
+            room={creds.room}
+            connect
+            audio
+            video={false}
+            className="vw-room"
+            onConnected={() => {
+              console.log('[Widget] LiveKit connected');
+              setStatus('connected');
+            }}
+            onDisconnected={() => {
+              console.log('[Widget] LiveKit disconnected');
+              reset();
+            }}
+            onError={(e) => {
+              console.error('[Widget] LiveKit error:', e.message);
+              setError(e.message);
+              setStatus('error');
+              setCreds(null);
+            }}
+          >
+            <RoomAudioRenderer />
+            <StartAudio label="Click to enable audio" />
+            <div className="vw-body">
+              <Visualizer />
+              <AgentUI />
+            </div>
+            <Controls />
+          </LiveKitRoom>
+        </ErrorBoundary>
       ) : (
         <div className="vw-idle">
           <div className="vw-orb" data-busy={status === 'connecting'} />
